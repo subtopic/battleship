@@ -1,30 +1,31 @@
-import java.util.Scanner;
+package daniel;
 
+/**
+ *
+ * @author Daniel Britt, djbritt@live.com
+ * @version 1.0
+ * @since 2/11/2015
+ *
+ **/
 public class battleship {
-	static String letters = "0ABCDEFGH";
+	static String letters = "0ABCDEFGHIJ";
 	static String num = "ABSDP";
 
 	public static void main(String[] args) {
-		char[][] gameBoard = new char[8][8];
-		Scanner stdin = new Scanner(System.in);
-		System.out.println(
-				"There are five kind of boats. Aircraft Carrier, Battleship, Submarine, Destroyer, and Patrol Boat\nUse the first letter of each ship to target it.");
-		System.out.println("Are you ready?");
-		String answer = stdin.next();
-		if (answer.contains("y")) {
-			setBoard(gameBoard);
-			gameBoard = randomize(gameBoard);
-			printBoard(gameBoard);
-		} else {
-			System.out.println("Come back when you're ready...");
-			System.exit(0);
-		}
+		final long startTime = System.currentTimeMillis();
+		char[][] gameBoard = new char[10][10];
+		setBoard(gameBoard);
+		gameBoard = shipChoose(gameBoard);
+		printBoard(gameBoard);
+		player(gameBoard);
+		final long endTime = System.currentTimeMillis();
+		System.out.println("Total execution time: " + (endTime - startTime) + "ms");
 	}
 
 	// clear and reset the board
 	static void setBoard(char[][] board) {
-		for (int row = 0; row < 8; row++) {
-			for (int col = 0; col < 8; col++) {
+		for (int row = 0; row < 10; row++) {
+			for (int col = 0; col < 10; col++) {
 				board[row][col] = '0';
 			}
 		}
@@ -32,97 +33,211 @@ public class battleship {
 
 	// print board
 	static void printBoard(char[][] board) {
-		for (int row = 0; row < 8; row++) {
+		for (int row = 0; row < 10; row++) {
 			if (row == 0) {
 				for (int i = 0; i < letters.length(); i++) {
-					System.out.printf("%c ", letters.charAt(i));
+					System.out.printf(" %-2c", letters.charAt(i));
 				}
 				System.out.println();
+				System.out.println();
 			}
-			System.out.printf("%d ", row + 1);
-			for (int col = 0; col < 8; col++) {
-				System.out.printf("%c ", board[row][col]);
+			System.out.printf(" %-2d", row + 1);
+			for (int col = 0; col < 10; col++) {
+				System.out.printf(" %-2c", board[row][col]);
 			}
+
 			System.out.println();
 		}
 	}
 
-	private static char[][] randomize(char[][] gameBoard) {
-		char[] letters = new char[5];
-		int counter1 = 0;
-		int counter2 = 0;
-		int counter3 = 0;
-		int length = 0;
-		char shipL = 'z';
+	private static char[][] player(char[][] gameBoard) {
+		for (int i = 0; i < 100; i++) {
+			int counter = 0;
+			double g1 = Math.random() * 10;
+			double g2 = Math.random() * 10;
+			int guess1 = (int) g1;
+			int guess2 = (int) g2;
+			for (int j = 0; j < 10; j++) {
+				for (int k = 0; k < 10; k++) {
+					if (gameBoard[j][k] == 'A') {
+						counter++;
+					}
+					if (gameBoard[j][k] == 'B') {
+						counter++;
+					}
+					if (gameBoard[j][k] == 'S') {
+						counter++;
+					}
+					if (gameBoard[j][k] == 'D') {
+						counter++;
+					}
+					if (gameBoard[j][k] == 'P') {
+						counter++;
+					}
+				}
+			}
+			if (counter == 0) {
+				break;
+			}
+
+			if (gameBoard[guess1][guess2] != 'X') {
+				gameBoard[guess1][guess2] = 'X';
+			} else {
+				i--;
+			}
+//			if (i > 89) {
+//				try {
+//					Thread.sleep(500);
+//				} catch (InterruptedException e) {
+//					System.out.println("can't sleep");
+//				}
+//			}
+			printBoard(gameBoard);
+		}
+		return gameBoard;
+	}
+
+	private static char[][] shipChoose(char[][] gameBoard) {
+		char[][] ships = new char[5][2];
+		ships[0][0] = 'A';
+		ships[0][1] = 5;
+		ships[1][0] = 'B';
+		ships[1][1] = 4;
+		ships[2][0] = 'S';
+		ships[2][1] = 3;
+		ships[3][0] = 'D';
+		ships[3][1] = 3;
+		ships[4][0] = 'P';
+		ships[4][1] = 2;
+
 		for (int i = 0; i < 5; i++) {
-			counter3++;
-			boolean skip = false;
-			double shipBef = Math.random() * 5;
-			int ship = (int) shipBef;
+			double ranNo = Math.random() * 8;
+			double aPo = Math.random() * 10;
+			int aPos = (int) aPo;
+			double bPo = Math.random() * 10;
+			int bPos = (int) bPo;
+			double sdPo = Math.random() * 10;
+			int sdPos = (int) sdPo;
+			double pPo = Math.random() * 10;
+			int pPos = (int) pPo;
 
-			// if(i == 3) {
-			// break;
-			// }
-			if (i > 0) {
-				for (int j = 0; j < 5; j++) {
-					if (letters[j] == shipL) {
-						skip = true;
-					}
-				}
-				
-				if (letters.toString().length() == 5) {
-					break;
-					// for (int l = 0; l < 5; l++) {
-					// if (letters[l] == shipL) {
-					// skip = true;
-					// }
-					// }
-				}
-				if (skip == false) {
-					if (ship == 0) {
-						length = 5;
-						letters[i] = 'A';
-						shipL = 'A';
-					} else if (ship == 1) {
-						length = 4;
-						letters[i] = 'B';
-						shipL = 'B';
-					} else if (ship == 2) {
-						length = 3;
-						letters[i] = 'S';
-						shipL = 'S';
-					} else if (ship == 3) {
-						length = 3;
-						letters[i] = 'D';
-						shipL = 'D';
-					} else {
-						length = 2;
-						letters[i] = 'P';
-						shipL = 'P';
-					}
-
-					double ranCo = Math.random() * 8;
-					int ranCol = (int) ranCo;
-
-					if (ranCo >= 4.5) {
-						for (int k = 0; k < length; k++) {
-							if (k == 0) {
-								counter1++;
+			int curNum = (int) ships[i][1];
+			char curLet = ships[i][0];
+			if (ranNo > 4) {
+				if (i == 0) {
+					for (int j = 0; j < curNum; j++) {
+						if (gameBoard[aPos][j] != '0') {
+							for (int k = 0; k < j; k++) {
+								gameBoard[aPos][k] = '0';
 							}
-							gameBoard[k][ranCol] = num.charAt(ship);
+							i--;
+							break;
 						}
-
-					} else {
-						for (int k = 0; k < length; k++) {
-							if (k == 0) {
-								counter2++;
+						gameBoard[aPos][j] = curLet;
+					}
+				} else if (i == 1) {
+					for (int j = 0; j < curNum; j++) {
+						if (gameBoard[bPos][j] != '0') {
+							for (int k = 0; k < j; k++) {
+								gameBoard[bPos][k] = '0';
 							}
-							gameBoard[ranCol][k] = num.charAt(ship);
+							i--;
+							break;
 						}
+						gameBoard[bPos][j] = curLet;
+					}
+				} else if (i == 2) {
+					for (int j = 0; j < curNum; j++) {
+						if (gameBoard[sdPos][j] != '0') {
+							for (int k = 0; k < j; k++) {
+								gameBoard[sdPos][k] = '0';
+							}
+							i--;
+							break;
+						}
+						gameBoard[sdPos][j] = curLet;
+					}
+				} else if (i == 3) {
+					for (int j = 0; j < curNum; j++) {
+						if (gameBoard[sdPos][j] != '0') {
+							for (int k = 0; k < j; k++) {
+								gameBoard[sdPos][k] = '0';
+							}
+							i--;
+							break;
+						}
+						gameBoard[sdPos][j] = curLet;
 					}
 				} else {
-					i--;
+					for (int j = 0; j < curNum; j++) {
+						if (gameBoard[pPos][j] != '0') {
+							for (int k = 0; k < j; k++) {
+								gameBoard[pPos][k] = '0';
+							}
+							i--;
+							break;
+						}
+						gameBoard[pPos][j] = curLet;
+					}
 				}
+			} else {
+				if (i == 0) {
+					for (int j = 0; j < curNum; j++) {
+						if (gameBoard[j][aPos] != '0') {
+							for (int k = 0; k < j; k++) {
+								gameBoard[k][aPos] = '0';
+							}
+							i--;
+							break;
+						}
+						gameBoard[j][aPos] = curLet;
+					}
+				} else if (i == 1) {
+					for (int j = 0; j < curNum; j++) {
+						if (gameBoard[j][bPos] != '0') {
+							for (int k = 0; k < j; k++) {
+								gameBoard[k][bPos] = '0';
+							}
+							i--;
+							break;
+						}
+						gameBoard[j][bPos] = curLet;
+					}
+				} else if (i == 2) {
+					for (int j = 0; j < curNum; j++) {
+						if (gameBoard[j][sdPos] != '0') {
+							for (int k = 0; k < j; k++) {
+								gameBoard[k][sdPos] = '0';
+							}
+							i--;
+							break;
+						}
+						gameBoard[j][sdPos] = curLet;
+					}
+				} else if (i == 3) {
+					for (int j = 0; j < curNum; j++) {
+						if (gameBoard[j][sdPos] != '0') {
+							for (int k = 0; k < j; k++) {
+								gameBoard[k][sdPos] = '0';
+							}
+							i--;
+							break;
+						}
+						gameBoard[j][sdPos] = curLet;
+					}
+				} else {
+					for (int j = 0; j < curNum; j++) {
+						if (gameBoard[j][pPos] != '0') {
+							for (int k = 0; k < j; k++) {
+								gameBoard[k][pPos] = '0';
+							}
+							i--;
+							break;
+						}
+						gameBoard[j][pPos] = curLet;
+					}
+				}
+
 			}
 		}
 		return gameBoard;
