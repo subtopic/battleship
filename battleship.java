@@ -1,5 +1,3 @@
-package daniel;
-
 /**
  *
  * @author Daniel Britt, djbritt@live.com
