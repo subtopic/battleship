@@ -1,6 +1,6 @@
 /**
  *
- * @author Daniel Britt, djbritt@live.com
+ * @author Daniel, laznin@gmail.com
  * @version 1.0
  * @since 2/11/2015
  *
