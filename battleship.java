@@ -1,6 +1,6 @@
 /**
 *
-*@author Daniel Britt, djbritt@live.com
+*@author Daniel B., laznin@gmail.com
 *@version 1.0
 *@since 2/11/2015
 *
@@ -43,7 +43,9 @@ public class battleship {
 		}
 	}
 
+	
 	private static char[][] shipChoose(char[][] gameBoard) {
+		//store ships into ships array
 		int counter = 0;
 		char[][] ships = new char[5][2];
 		ships[0][0] = 'A';
@@ -56,7 +58,10 @@ public class battleship {
 		ships[3][1] = 3;
 		ships[4][0] = 'P';
 		ships[4][1] = 2;
-
+		
+		//Create random positions for ships to be placed.
+		//Place ships on board, varied horizontal or vertical based on random number
+		//Make sure ships don't overwrite each other
 		for (int i = 0; i < 5; i++) {
 			double ranNo = Math.random() * 8;
 			int ranNum = (int) ranNo;
